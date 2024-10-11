@@ -10,13 +10,12 @@
 struct node
 {
 	char inf[256]; // полезная информация
-	int pr;
 	struct node *next; // ссылка на следующий элемент
 };
 
 struct node *head = NULL, *last = NULL, *f = NULL;
 int dlinna = 0, flag = -1;
-void spstore(void), review(void), del(char *name);
+void push(void), review(void), del(char *name);
 char find_el[256], str[256];
 struct node *find(char *name);
 struct node *get_struct(void);
@@ -39,37 +38,29 @@ struct node *get_struct(void)
 		return NULL;
 	}
 	strcpy(p->inf, s);
-	printf("Введите приоритет: \n ");
-	scanf("%i", &(p->pr));
 	p->next = NULL;
 	return p;
 }
 
-void spstore(void)
+void push(void)
 {
-	struct node *p = NULL, *temp = head;
+	struct node *p = NULL;
 	p = get_struct();
 	if (head == NULL && p != NULL) // если списка нет, то устанавливаем голову
 	{
 		head = p;
+		last = p;
 	}
-	else if (head != NULL && p != NULL) // список уже есть, то вставляем в конец
+	else if (head != NULL && p != NULL) // список уже есть, то вставляем в начало
 	{
-		if(p->pr > temp->pr){
-			p->next = temp;
-			head = p;
-			return;
-		}
-		while(true){
-			if(temp->next==NULL || p->pr > temp->next->pr){
-				p->next = temp->next;
-				temp->next = p;
-				return;
-			}
-			temp = temp->next;
-		}
+		p->next = head;
+		head = p;
 	}
 	return;
+}
+
+struct node *pop(){
+	struct node *temp = last;
 }
 
 /* Просмотр содержимого списка. */
@@ -82,7 +73,7 @@ void review(void)
 	}
 	while (struc)
 	{
-		printf("%s, %d; ", struc->inf, struc->pr);
+		printf("%s; ", struc->inf);
 		struc = struc->next;
 	}
 	return;
@@ -99,7 +90,7 @@ struct node *find(char *name)
 	{
 		if (strcmp(name, struc->inf) == 0)
 		{
-			printf("%s, %d ", struc->inf, struc->pr);
+			printf("%s", struc->inf);
 			return struc;
 		}
 		struc = struc->next;
@@ -174,7 +165,7 @@ int main()
 		scanf("%d", &flag);
 		if(flag == 1){
 			system("cls");
-			spstore();
+			push();
 		}
 		else if(flag == 2){
 			system("cls");
